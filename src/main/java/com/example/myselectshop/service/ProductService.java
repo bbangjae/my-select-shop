@@ -47,4 +47,12 @@ public class ProductService {
                 .map(ProductResponseDto::of)
                 .toList();
     }
+
+    @Transactional
+    public void updateBySearch(Long id, ItemDto itemDto) {
+        Product product = productRepository.findById(id).orElseThrow(() ->
+                new NullPointerException("해당 상품은 존재하지 않습니다.")
+        );
+        product.updateByItemDto(itemDto.getLprice());
+    }
 }

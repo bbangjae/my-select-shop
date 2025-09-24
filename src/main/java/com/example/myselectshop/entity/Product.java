@@ -42,4 +42,8 @@ public class Product extends Timestamped {
     public void updateMyprice(int myprice) {
         this.myprice = myprice;
     }
+
+    public void updateByItemDto(int newLprice) {
+        this.lprice = newLprice;
+    }
 }
