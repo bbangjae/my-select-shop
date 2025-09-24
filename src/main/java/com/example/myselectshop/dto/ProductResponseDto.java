@@ -22,4 +22,8 @@ public class ProductResponseDto {
         this.lprice = product.getLprice();
         this.myprice = product.getMyprice();
     }
+
+    public static ProductResponseDto of(Product product) {
+        return new ProductResponseDto(product);
+    }
 }
