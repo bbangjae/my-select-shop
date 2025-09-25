@@ -4,6 +4,7 @@ import com.example.myselectshop.dto.ProductMypriceRequestDto;
 import com.example.myselectshop.dto.ProductRequestDto;
 import com.example.myselectshop.dto.ProductResponseDto;
 import com.example.myselectshop.entity.Product;
+import com.example.myselectshop.entity.User;
 import com.example.myselectshop.naver.dto.ItemDto;
 import com.example.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductResponseDto createProduct(ProductRequestDto requestDto) {
-        Product product = productRepository.save(new Product(requestDto));
+    public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
+        Product product = productRepository.save(new Product(requestDto, user));
         return new ProductResponseDto(product);
     }
 
@@ -42,7 +43,13 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public List<ProductResponseDto> getProducts() {
+    public List<ProductResponseDto> getProducts(User user) {
+        return productRepository.findAllByUser(user).stream()
+                .map(ProductResponseDto::of)
+                .toList();
+    }
+
+    public List<ProductResponseDto> getAllProducts() {
         return productRepository.findAll().stream()
                 .map(ProductResponseDto::of)
                 .toList();
