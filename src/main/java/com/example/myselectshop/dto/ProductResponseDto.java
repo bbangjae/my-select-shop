@@ -4,6 +4,9 @@ import com.example.myselectshop.entity.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class ProductResponseDto {
@@ -14,6 +17,8 @@ public class ProductResponseDto {
     private int lprice;
     private int myprice;
 
+    private List<FolderResponseDto> productFolderList = new ArrayList<>();
+
     public ProductResponseDto(Product product) {
         this.id = product.getId();
         this.title = product.getTitle();
@@ -21,6 +26,9 @@ public class ProductResponseDto {
         this.image = product.getImage();
         this.lprice = product.getLprice();
         this.myprice = product.getMyprice();
+        this.productFolderList = product.getProductFolderList().stream()
+                .map(folder -> new FolderResponseDto(folder.getFolder()))
+                .toList();
     }
 
     public static ProductResponseDto of(Product product) {
