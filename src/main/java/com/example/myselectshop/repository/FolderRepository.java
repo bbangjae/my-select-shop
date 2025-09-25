@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface FolderRepository extends JpaRepository<Folder, Integer> {
+public interface FolderRepository extends JpaRepository<Folder, Long> {
 
     // SELECT * FROM folder WHERE user_id = ? AND name in (?, ?, ?);
     List<Folder> findAllByUserAndNameIn(User user, List<String> folderNames);
