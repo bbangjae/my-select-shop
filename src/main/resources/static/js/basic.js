@@ -19,38 +19,38 @@ $(document).ready(function () {
         url: `/api/user-info`,
         contentType: 'application/json',
     })
-        .done(function (res, status, xhr) {
-            const username = res.username;
-            const isAdmin = !!res.admin;
+    .done(function (res, status, xhr) {
+        const username = res.username;
+        const isAdmin = !!res.admin;
 
-            if (!username) {
-                window.location.href = '/api/user/login-page';
-                return;
+        if (!username) {
+            window.location.href = '/api/user/login-page';
+            return;
+        }
+
+        $('#username').text(username);
+        if (isAdmin) {
+            $('#admin').text(true);
+            showProduct();
+        } else {
+            showProduct();
+        }
+
+        // 로그인한 유저의 폴더
+        $.ajax({
+            type: 'GET',
+            url: `/api/user-folder`,
+            error(error) {
+                logout();
             }
-
-            $('#username').text(username);
-            if (isAdmin) {
-                $('#admin').text(true);
-                showProduct();
-            } else {
-                showProduct();
-            }
-
-            // 로그인한 유저의 폴더
-            $.ajax({
-                type: 'GET',
-                url: `/api/user-folder`,
-                error(error) {
-                    logout();
-                }
-            }).done(function (fragment) {
-                $('#fragment').replaceWith(fragment);
-            });
-
-        })
-        .fail(function (jqXHR, textStatus) {
-            logout();
+        }).done(function (fragment) {
+            $('#fragment').replaceWith(fragment);
         });
+
+    })
+    .fail(function (jqXHR, textStatus) {
+        logout();
+    });
 
     // id 가 query 인 녀석 위에서 엔터를 누르면 execSearch() 함수를 실행하라는 뜻입니다.
     $('#query').on('keypress', function (e) {
@@ -294,9 +294,9 @@ function addFolder() {
         alert('성공적으로 등록되었습니다.');
         window.location.reload();
     })
-        .fail(function(xhr, textStatus, errorThrown) {
-            alert("중복된 폴더입니다.");
-        });
+    .fail(function(xhr, textStatus, errorThrown) {
+        alert("중복된 폴더입니다.");
+    });
 }
 
 function addProductItem(product) {
@@ -369,9 +369,9 @@ function addInputForProductToFolder(productId, button) {
                     alert('성공적으로 등록되었습니다.');
                     window.location.reload();
                 })
-                    .fail(function(xhr, textStatus, errorThrown) {
-                        alert("중복된 폴더입니다.");
-                    });
+                .fail(function(xhr, textStatus, errorThrown) {
+                    alert("중복된 폴더입니다.");
+                });
             });
         },
         error(error, status, request) {
@@ -428,10 +428,16 @@ function logout() {
 }
 
 function getToken() {
+
     let auth = Cookies.get('Authorization');
 
     if(auth === undefined) {
         return '';
+    }
+
+    // kakao 로그인 사용한 경우 Bearer 추가
+    if(auth.indexOf('Bearer') === -1 && auth !== ''){
+        auth = 'Bearer ' + auth;
     }
 
     return auth;
